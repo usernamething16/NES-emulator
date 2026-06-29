@@ -1,11 +1,16 @@
 #include "cpu.h"
 
-uint8_t cpu_get_flag(CPU *cpu)
+void cpu_connect_bus(CPU *cpu, Bus *bus)
 {
 
 }
 
-void cpu_set_flag(CPU *cpu, uint8_t flag)
+uint8_t cpu_get_flag(CPU *cpu, Flags f)
+{
+    
+}
+
+void cpu_set_flag(CPU *cpu, Flags f, uint8_t val)
 {
     
 }
