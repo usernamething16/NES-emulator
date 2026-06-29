@@ -2,7 +2,10 @@
 
 void bus_init(Bus *bus)
 {
-
+    cpu_connect_bus(&bus->cpu, bus);
+    int size = sizeof(bus->ram)/sizeof(bus->ram[0]);
+    for (int i = 0; i < size; i++)
+        bus->ram[i] = 0x00;
 }
 
 uint8_t bus_read(Bus *bus, uint16_t addr)
