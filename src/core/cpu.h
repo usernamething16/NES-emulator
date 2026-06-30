@@ -29,7 +29,7 @@ typedef struct CPU {
     uint8_t fetched;
     uint8_t opcode;
     uint8_t cycles;
-    uint8_t addr_add;
+    uint8_t addr_abs;
     uint8_t addr_rel;
 
     Bus *bus;
