@@ -6,14 +6,14 @@
 typedef struct Bus {} Bus;
 
 typedef enum {
-    C = (1 << 0), // carry bit
-    Z = (1 << 1), // zero
-    I = (1 << 2), // interrupt disable
-    D = (1 << 3), // decimal
-    B = (1 << 4), // break
-    U = (1 << 5), // unused
-    V = (1 << 6), // overflow
-    N = (1 << 7), // negative
+    FLAG_C = (1 << 0), // carry bit
+    FLAG_Z = (1 << 1), // zero
+    FLAG_I = (1 << 2), // interrupt disable
+    FLAG_D = (1 << 3), // decimal
+    FLAG_B = (1 << 4), // break
+    FLAG_U = (1 << 5), // unused
+    FLAG_V = (1 << 6), // overflow
+    FLAG_N = (1 << 7), // negative
 } Flags;
 
 typedef struct CPU {
