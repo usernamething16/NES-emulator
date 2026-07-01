@@ -64,12 +64,51 @@ void cpu_reset(CPU *cpu)
 
 void cpu_irq(CPU *cpu)
 {
+    if (cpu_get_flag(cpu, FLAG_I) != 0)
+        return;
+    
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, (cpu->pc >> 8) & 0x00FF);
+    cpu->stkp--;
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, cpu->pc & 0x00FF);
+    cpu->stkp--;
 
+    cpu_set_flag(cpu, FLAG_B, 0);
+    cpu_set_flag(cpu, FLAG_I, 1);
+    cpu_set_flag(cpu, FLAG_U, 1);
+
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, cpu->status);
+    cpu->stkp--;
+
+    cpu->addr_abs = 0xFFFE;
+    uint16_t lo = bus_read(cpu->bus, cpu->addr_abs);
+    uint16_t hi = bus_read(cpu->bus, cpu->addr_abs + 1);
+
+    cpu->pc = (hi << 8) | lo;
+
+    cpu->cycles = 7;
 }
 
 void cpu_nmi(CPU *cpu)
 {
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, (cpu->pc >> 8) & 0x00FF);
+    cpu->stkp--;
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, cpu->pc & 0x00FF);
+    cpu->stkp--;
 
+    cpu_set_flag(cpu, FLAG_B, 0);
+    cpu_set_flag(cpu, FLAG_I, 1);
+    cpu_set_flag(cpu, FLAG_U, 1);
+
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, cpu->status);
+    cpu->stkp--;
+
+    cpu->addr_abs = 0xFFFA;
+    uint16_t lo = bus_read(cpu->bus, cpu->addr_abs);
+    uint16_t hi = bus_read(cpu->bus, cpu->addr_abs + 1);
+
+    cpu->pc = (hi << 8) | lo;
+
+    cpu->cycles = 7;
 }
 
 int cpu_complete(const CPU *cpu)
