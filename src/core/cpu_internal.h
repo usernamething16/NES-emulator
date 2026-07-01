@@ -37,6 +37,7 @@ uint8_t BMI(CPU *cpu);
 uint8_t BNE(CPU *cpu);
 uint8_t BPL(CPU *cpu);
 uint8_t BRK(CPU *cpu);
+uint8_t BVC(CPU *cpu);
 uint8_t BVS(CPU *cpu);
 uint8_t CLC(CPU *cpu);
 uint8_t CLD(CPU *cpu);
@@ -80,5 +81,9 @@ uint8_t TAY(CPU *cpu);
 uint8_t TSX(CPU *cpu);
 uint8_t TXA(CPU *cpu);
 uint8_t TXS(CPU *cpu);
+uint8_t TYA(CPU *cpu);
+
+// illegal ops
+uint8_t XXX(CPU *cpu);
 
 #endif

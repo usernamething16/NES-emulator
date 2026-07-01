@@ -1,6 +1,7 @@
 #include "cpu_internal.h"
 #include "bus.h"
 
+// ops
 uint8_t ADC(CPU *cpu)
 {
     return 0;
@@ -55,6 +56,12 @@ uint8_t BRK(CPU *cpu)
 {
     return 0;
 }
+
+uint8_t BVC(CPU *cpu)
+{
+    return 0;
+}
+
 
 uint8_t BVS(CPU *cpu)
 {
@@ -271,3 +278,13 @@ uint8_t TXS(CPU *cpu)
     return 0;
 }
 
+uint8_t TYA(CPU *cpu)
+{
+
+}
+
+// illegal ops
+uint8_t XXX(CPU *cpu)
+{
+    return 0;
+}
