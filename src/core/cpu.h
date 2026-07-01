@@ -36,14 +36,12 @@ typedef struct CPU {
 } CPU;
 
 void cpu_connect_bus(CPU *cpu, Bus *bus);
+uint8_t cpu_get_flag(CPU *cpu, Flags f);
+void cpu_set_flag(CPU *cpu, Flags f, uint8_t val);
 void cpu_reset(CPU *cpu);
 void cpu_irq(CPU *cpu);
 void cpu_nmi(CPU *cpu);
 void cpu_clock(CPU *cpu);
 int cpu_complete(CPU *cpu);
-uint8_t cpu_get_flag(CPU *cpu, Flags f);
-void cpu_set_flag(CPU *cpu, Flags f, uint8_t val);
-
-
 
 #endif
