@@ -11,6 +11,8 @@ typedef struct instruction {
     uint8_t cycles;
 } instruction;
 
+extern const instruction cpu_lookup[256];
+
 // address modes
 uint8_t IMP(CPU *cpu);
 uint8_t IMM(CPU *cpu);
