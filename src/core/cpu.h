@@ -1,7 +1,7 @@
 #ifndef CPU_H
 #define CPU_H
 
-#include<stdint.h>
+#include <stdint.h>
 
 typedef struct Bus {} Bus;
 

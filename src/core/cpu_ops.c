@@ -280,7 +280,7 @@ uint8_t TXS(CPU *cpu)
 
 uint8_t TYA(CPU *cpu)
 {
-
+    return 0;
 }
 
 // illegal ops
