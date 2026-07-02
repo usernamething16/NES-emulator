@@ -3,10 +3,12 @@
 
 #include <stdint.h>
 #include "cpu.h"
+#include "cartridge.h"
 
 typedef struct Bus {
     CPU cpu;
     uint8_t ram[64 * 1024];
+    Cartridge cart;
 } Bus;
 
 void bus_init(Bus *bus);
