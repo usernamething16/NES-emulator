@@ -50,10 +50,14 @@ int cartridge_load(Cartridge *cart, const char *path)
 
 uint8_t cartridge_read(Cartridge *cart, uint16_t addr)
 {
-
+    if (addr >= 0x8000) {
+        uint16_t mask = (cart->prg_banks > 1) ? 0x7FFF : 0x3FFF;
+        return cart->prg[addr & mask];
+    }
+    return 0x00;
 }
 
 void cartridge_write(Cartridge *cart, uint16_t addr, uint8_t data)
 {
-
+    (void)cart; (void)addr; (void)data;
 }
