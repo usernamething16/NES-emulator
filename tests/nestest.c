@@ -50,6 +50,27 @@ int main(int argc, char **argv)
         int e_p = log_field(line, "P:");
         int e_sp = log_field(line, "SP:");
 
-        // todo: finish
+        if (nes.cpu.pc != e_pc || nes.cpu.a != e_a ||
+            nes.cpu.x != e_x || nes.cpu.y != e_y ||
+            nes.cpu.status != e_p || nes.cpu.stkp != e_sp) {
+            
+            printf("MISMATCH at line %ld:\n", n);
+            printf(" %s", line);
+            printf("  expected  PC:%04X A:%02X X:%02X Y:%02X P:%02X SP:%02X\n",
+                   e_pc, e_a, e_x, e_y, e_p, e_sp);
+            printf("  got       PC:%04X A:%02X X:%02X Y:%02X P:%02X SP:%02X\n",
+                   nes.cpu.pc, nes.cpu.a, nes.cpu.x, nes.cpu.y,
+                   nes.cpu.status, nes.cpu.stkp);
+            fclose(log);
+            return 1;
+        }
+
+        do {
+            cpu_clock(&nes.cpu);
+        } while (!cpu_complete(&nes.cpu));
     }
+
+    fprintf("PASS: all %ld log lines matched\n", n);
+    fclose(log);
+    return 0;
 }
