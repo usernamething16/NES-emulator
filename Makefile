@@ -10,6 +10,7 @@ SRCS := \
 	src/core/cpu_addr.c \
 	src/core/cpu_tables.c \
 	src/core/bus.c \
+	src/core/cartridge.c
 
 OBJS := $(SRCS:%.c=$(BUILD)/%.o)
 
@@ -23,6 +24,12 @@ $(BUILD)/nes: $(OBJS)
 $(BUILD)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+TEST_OBJS := $(filter-out $(BUILD)/src/main.o,$(OBJS))
+
+test: $(TEST_OBJS) $(BUILD)/tests/nestest.o
+	$(CC) $(TEST_OBJS) $(BUILD)/tests/nestest.o -o $(BUILD)/nestest $(LDFLAGS)
+	./$(BUILD)/nestest
 
 clean:
 	rm -rf $(BUILD)
