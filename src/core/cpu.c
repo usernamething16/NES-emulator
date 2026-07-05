@@ -53,7 +53,7 @@ void cpu_reset(CPU *cpu)
 
     // top of the stack
     cpu->stkp = 0xFD;
-    cpu->status = FLAG_U;
+    cpu->status = FLAG_U | FLAG_I;
 
     cpu->addr_abs = 0x0000;
     cpu->addr_rel = 0x0000;
