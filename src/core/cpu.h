@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef struct Bus {} Bus;
+typedef struct Bus Bus;
 
 typedef enum {
     FLAG_C = (1 << 0), // carry bit
@@ -29,8 +29,8 @@ typedef struct CPU {
     uint8_t fetched;
     uint8_t opcode;
     uint8_t cycles;
-    uint8_t addr_abs;
-    uint8_t addr_rel;
+    uint16_t addr_abs;
+    uint16_t addr_rel;
 
     Bus *bus;
 } CPU;
