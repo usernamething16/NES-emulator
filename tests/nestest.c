@@ -70,7 +70,7 @@ int main(int argc, char **argv)
         } while (!cpu_complete(&nes.cpu));
     }
 
-    fprintf("PASS: all %ld log lines matched\n", n);
+    printf("PASS: all %ld log lines matched\n", n);
     fclose(log);
     return 0;
 }
