@@ -140,6 +140,8 @@ uint8_t INY(CPU *cpu)
 
 uint8_t JMP(CPU *cpu)
 {
+    cpu->pc = cpu->addr_abs;
+
     return 0;
 }
 
