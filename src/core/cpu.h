@@ -42,6 +42,6 @@ void cpu_reset(CPU *cpu);
 void cpu_irq(CPU *cpu);
 void cpu_nmi(CPU *cpu);
 void cpu_clock(CPU *cpu);
-int cpu_complete(CPU *cpu);
+int cpu_complete(const CPU *cpu);
 
 #endif
