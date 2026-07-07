@@ -24,7 +24,7 @@ uint8_t IMM(CPU *cpu)
 uint8_t ZP0(CPU *cpu)
 {
     cpu->addr_abs = bus_read(cpu->bus, cpu->pc);
-
+    cpu->pc++;
     return 0;
 }
 
