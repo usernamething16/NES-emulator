@@ -67,7 +67,7 @@ uint8_t ABX(CPU *cpu)
     uint16_t hi = bus_read(cpu->bus, cpu->pc);
     cpu->pc++;
 
-    cpu->addr_abs = (hi << 8) | lo + cpu->x;
+    cpu->addr_abs = ((hi << 8) | lo) + cpu->x;
     if ((cpu->addr_abs & 0xFF00) != (hi << 8))
         return 1;
     return 0;
@@ -81,7 +81,7 @@ uint8_t ABY(CPU *cpu)
     uint16_t hi = bus_read(cpu->bus, cpu->pc);
     cpu->pc++;
 
-    cpu->addr_abs = (hi << 8) | lo + cpu->y;
+    cpu->addr_abs = ((hi << 8) | lo) + cpu->y;
     if ((cpu->addr_abs & 0xFF00) != (hi << 8))
         return 1;
     return 0;
@@ -142,9 +142,9 @@ uint8_t IZY(CPU *cpu)
     uint16_t lo = bus_read(cpu->bus, arg | 0x00FF);
     uint16_t hi = bus_read(cpu->bus, (arg + 1) | 0x00FF);
 
-    cpu->addr_abs = (hi << 8) | lo + cpu->y;
+    cpu->addr_abs = ((hi << 8) | lo) + cpu->y;
 
-    if (cpu->addr_abs | 0xFF00 != (hi << 8))
+    if ((cpu->addr_abs | 0xFF00) != (hi << 8))
         return 1;
 
     return 0;
