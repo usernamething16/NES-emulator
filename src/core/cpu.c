@@ -6,6 +6,13 @@ void cpu_connect_bus(CPU *cpu, Bus *bus)
     cpu->bus = bus;
 }
 
+uint8_t cpu_fetch(CPU *cpu)
+{
+    if (cpu_lookup[cpu->opcode].addrmode != IMP)
+        cpu->fetched = bus_read(cpu->bus, cpu->addr_abs);
+    return cpu->fetched;
+}
+
 uint8_t cpu_get_flag(CPU *cpu, Flags f)
 {
     return (cpu->status & f) ? 1 : 0;
