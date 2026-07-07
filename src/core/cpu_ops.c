@@ -157,7 +157,13 @@ uint8_t LDA(CPU *cpu)
 
 uint8_t LDX(CPU *cpu)
 {
-    return 0;
+    cpu_fetch(cpu);
+    cpu->x = cpu->fetched;
+
+    cpu_set_flag(cpu, FLAG_Z, (cpu->x == 0x00));
+    cpu_set_flag(cpu, FLAG_N, (cpu->x & 0x80));
+
+    return 1;
 }
 
 uint8_t LDY(CPU *cpu)
