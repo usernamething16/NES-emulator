@@ -5,8 +5,8 @@
 
 typedef struct instruction {
     const char *name;
-    uint8_t (*addrmode)(CPU *cpu);
     uint8_t (*operate)(CPU *cpu); 
+    uint8_t (*addrmode)(CPU *cpu);
     uint8_t cycles;
 } instruction;
 
