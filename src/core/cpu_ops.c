@@ -19,36 +19,102 @@ uint8_t ASL(CPU *cpu)
 
 uint8_t BCC(CPU *cpu)
 {
+    if (!cpu_get_flag(cpu, FLAG_C)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+    
     return 0;
 }
 
 uint8_t BCS(CPU *cpu)
 {
+    if (cpu_get_flag(cpu, FLAG_C)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+
     return 0;
 }
 
 uint8_t BEQ(CPU *cpu)
 {
+    if (cpu_get_flag(cpu, FLAG_Z)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+
     return 0;
 }
 
 uint8_t BIT(CPU *cpu)
 {
+    cpu_fetch(cpu);
+
+    cpu_set_flag(cpu, FLAG_Z, (cpu->a & cpu->fetched) == 0);
+    cpu_set_flag(cpu, FLAG_V, cpu->fetched & 0x40);
+    cpu_set_flag(cpu, FLAG_N, cpu->fetched & 0x80);
+
     return 0;
 }
 
 uint8_t BMI(CPU *cpu)
 {
+    if (cpu_get_flag(cpu, FLAG_N)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+
     return 0;
 }
 
 uint8_t BNE(CPU *cpu)
 {
+    if (!cpu_get_flag(cpu, FLAG_Z)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+
     return 0;
 }
 
 uint8_t BPL(CPU *cpu)
 {
+    if (!cpu_get_flag(cpu, FLAG_N)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+
     return 0;
 }
 
@@ -59,17 +125,39 @@ uint8_t BRK(CPU *cpu)
 
 uint8_t BVC(CPU *cpu)
 {
+    if (!cpu_get_flag(cpu, FLAG_V)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+
     return 0;
 }
 
 
 uint8_t BVS(CPU *cpu)
 {
+    if (cpu_get_flag(cpu, FLAG_V)) {
+        cpu->cycles++;
+        cpu->addr_abs = cpu->pc + cpu->addr_rel;
+
+        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+            cpu->cycles++;
+        
+        cpu->pc = cpu->addr_abs;
+    }
+
     return 0;
 }
 
 uint8_t CLC(CPU *cpu)
 {
+    cpu_set_flag(cpu, FLAG_C, 0);
+
     return 0;
 }
 
@@ -147,12 +235,30 @@ uint8_t JMP(CPU *cpu)
 
 uint8_t JSR(CPU *cpu)
 {
+    cpu->pc--;
+
+    uint8_t hi = (cpu->pc >> 8) & 0x00FF;
+    uint8_t lo = (cpu->pc & 0x00FF);
+
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, hi);
+    cpu->stkp--;
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, lo);
+    cpu->stkp--;
+
+    cpu->pc = cpu->addr_abs;
+
     return 0;
 }
 
 uint8_t LDA(CPU *cpu)
 {
-    return 0;
+    cpu_fetch(cpu);
+    cpu->a = cpu->fetched;
+
+    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0x00);
+    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
+
+    return 1;
 }
 
 uint8_t LDX(CPU *cpu)
@@ -160,15 +266,21 @@ uint8_t LDX(CPU *cpu)
     cpu_fetch(cpu);
     cpu->x = cpu->fetched;
 
-    cpu_set_flag(cpu, FLAG_Z, (cpu->x == 0x00));
-    cpu_set_flag(cpu, FLAG_N, (cpu->x & 0x80));
+    cpu_set_flag(cpu, FLAG_Z, cpu->x == 0x00);
+    cpu_set_flag(cpu, FLAG_N, cpu->x & 0x80);
 
     return 1;
 }
 
 uint8_t LDY(CPU *cpu)
 {
-    return 0;
+    cpu_fetch(cpu);
+    cpu->y = cpu->fetched;
+
+    cpu_set_flag(cpu, FLAG_Z, cpu->y == 0x00);
+    cpu_set_flag(cpu, FLAG_N, cpu->y & 0x80);
+
+    return 1;
 }
 
 uint8_t LSR(CPU *cpu)
@@ -178,6 +290,7 @@ uint8_t LSR(CPU *cpu)
 
 uint8_t NOP(CPU *cpu)
 {
+    (void)cpu;
     return 0;
 }
 
@@ -233,6 +346,8 @@ uint8_t SBC(CPU *cpu)
 
 uint8_t SEC(CPU *cpu)
 {
+    cpu_set_flag(cpu, FLAG_C, 1);
+
     return 0;
 }
 
@@ -248,11 +363,14 @@ uint8_t SEI(CPU *cpu)
 
 uint8_t STA(CPU *cpu)
 {
+    bus_write(cpu->bus, cpu->addr_abs, cpu->a);
+
     return 0;
 }
 
 uint8_t STX(CPU *cpu)
 {
+    bus_write(cpu->bus, cpu->addr_abs, cpu->x);
     return 0;
 }
 
