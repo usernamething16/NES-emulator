@@ -105,17 +105,47 @@ uint8_t IND(CPU *cpu)
     uint16_t lo = bus_read(cpu->bus, cpu->pc);
     cpu->pc++;
 
+    uint16_t hi = bus_read(cpu->bus, cpu->pc);
+    cpu->pc++;
+
+    uint16_t ptr = (hi << 8) | lo;
+
+    if (lo == 0x00FF) {
+        cpu->addr_abs = (bus_read(cpu->bus, ptr & 0xFF00) << 8) | bus_read(cpu->bus, ptr);
+    } else {
+        cpu->addr_abs = (bus_read(cpu->bus, ptr + 1) << 8) | bus_read(cpu->bus, ptr);
+    }
+
     return 0;
 }
 
 // (d,x) (indirect x)
 uint8_t IZX(CPU *cpu)
 {
+    uint16_t arg = bus_read(cpu->bus, cpu->pc);
+    cpu->pc++;
+
+    uint16_t lo = bus_read(cpu->bus, (arg + cpu->x) | 0x00FF);
+    uint16_t hi = bus_read(cpu->bus, (arg + cpu->x + 1) | 0x00FF);
+
+    cpu->addr_abs = (hi << 8) | lo;
+
     return 0;
 }
 
 // (d),y (indirect y)
 uint8_t IZY(CPU *cpu)
 {
+    uint16_t arg = bus_read(cpu->bus, cpu->pc);
+    cpu->pc++;
+
+    uint16_t lo = bus_read(cpu->bus, arg | 0x00FF);
+    uint16_t hi = bus_read(cpu->bus, (arg + 1) | 0x00FF);
+
+    cpu->addr_abs = (hi << 8) | lo + cpu->y;
+
+    if (cpu->addr_abs | 0xFF00 != (hi << 8))
+        return 1;
+
     return 0;
 }
