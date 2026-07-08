@@ -9,6 +9,13 @@ uint8_t ADC(CPU *cpu)
 
 uint8_t AND(CPU *cpu)
 {
+    cpu_fetch(cpu);
+    cpu->a &= cpu->fetched;
+    
+
+    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
+    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
+
     return 0;
 }
 
@@ -178,6 +185,9 @@ uint8_t CLV(CPU *cpu)
 
 uint8_t CMP(CPU *cpu)
 {
+    cpu_fetch(cpu);
+    // todo: finish
+
     return 0;
 }
 
@@ -301,21 +311,41 @@ uint8_t ORA(CPU *cpu)
 
 uint8_t PHA(CPU *cpu)
 {
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, cpu->a);
+    cpu->stkp--;
+
     return 0;
 }
 
 uint8_t PHP(CPU *cpu)
 {
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, cpu->status | FLAG_B | FLAG_U);
+    cpu->stkp--;
+
+    // todo: we potentially have to set the flags as well
+
     return 0;
 }
 
 uint8_t PLA(CPU *cpu)
 {
+    cpu->stkp++;
+    cpu->a = bus_read(cpu->bus, 0x0100 + cpu->stkp);
+
+    cpu_set_flag(cpu->bus, FLAG_Z, cpu->a == 0);
+    cpu_set_flag(cpu->bus, FLAG_N, cpu->a & 0x80);
+
     return 0;
 }
 
 uint8_t PLP(CPU *cpu)
 {
+    cpu->stkp++;
+    cpu->status = bus_read(cpu->bus, 0x0100 + cpu->stkp);
+
+    cpu_set_flag(cpu, FLAG_B, 0);
+    cpu_set_flag(cpu, FLAG_U, 1);
+
     return 0;
 }
 
