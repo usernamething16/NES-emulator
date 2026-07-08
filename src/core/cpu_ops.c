@@ -336,6 +336,13 @@ uint8_t RTI(CPU *cpu)
 
 uint8_t RTS(CPU *cpu)
 {
+    cpu->stkp++;
+    uint16_t lo = bus_read(cpu->bus, 0x0100 + cpu->stkp);
+    cpu->stkp++;
+    uint16_t hi = bus_read(cpu->bus, 0x0100 + cpu->stkp);
+
+    cpu->pc = ((hi << 8) | lo) + 1;
+
     return 0;
 }
 
@@ -353,11 +360,15 @@ uint8_t SEC(CPU *cpu)
 
 uint8_t SED(CPU *cpu)
 {
+    cpu_set_flag(cpu, FLAG_D, 1);
+
     return 0;
 }
 
 uint8_t SEI(CPU *cpu)
 {
+    cpu_set_flag(cpu, FLAG_I, 1);
+
     return 0;
 }
 
