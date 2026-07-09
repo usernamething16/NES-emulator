@@ -186,18 +186,36 @@ uint8_t CLV(CPU *cpu)
 uint8_t CMP(CPU *cpu)
 {
     cpu_fetch(cpu);
-    // todo: finish
+    uint8_t result = cpu->a - cpu->fetched;
+
+    cpu_set_flag(cpu, FLAG_C, result >= 0);
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
 
     return 0;
 }
 
 uint8_t CPX(CPU *cpu)
 {
+    cpu_fetch(cpu);
+    uint8_t result = cpu->x - cpu->fetched;
+
+    cpu_set_flag(cpu, FLAG_C, result >= 0);
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
+
     return 0;
 }
 
 uint8_t CPY(CPU *cpu)
 {
+    cpu_fetch(cpu);
+    uint8_t result = cpu->y - cpu->fetched;
+
+    cpu_set_flag(cpu, FLAG_C, result >= 0);
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
+
     return 0;
 }
 
