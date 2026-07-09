@@ -170,16 +170,22 @@ uint8_t CLC(CPU *cpu)
 
 uint8_t CLD(CPU *cpu)
 {
+    cpu_set_flag(cpu, FLAG_D, 0);
+
     return 0;
 }
 
 uint8_t CLI(CPU *cpu)
 {
+    cpu_set_flag(cpu, FLAG_I, 0);
+
     return 0;
 }
 
 uint8_t CLV(CPU *cpu)
 {
+    cpu_set_flag(cpu, FLAG_V, 0);
+
     return 0;
 }
 
