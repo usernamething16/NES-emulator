@@ -242,6 +242,12 @@ uint8_t DEY(CPU *cpu)
 
 uint8_t EOR(CPU *cpu)
 {
+    cpu_fetch(cpu);
+    cpu->a ^= cpu->fetched;
+    
+    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
+    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
+
     return 0;
 }
 
@@ -330,6 +336,12 @@ uint8_t NOP(CPU *cpu)
 
 uint8_t ORA(CPU *cpu)
 {
+    cpu_fetch(cpu);
+    cpu->a |= cpu->fetched;
+
+    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
+    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
+
     return 0;
 }
 
