@@ -31,11 +31,17 @@ uint8_t AND(CPU *cpu)
 
 uint8_t ASL(CPU *cpu)
 {
-    cpu_set_flag(cpu, FLAG_C, cpu->a & 0x80);
-    cpu->a <<= 1;
+    cpu_fetch(cpu);
+    cpu_set_flag(cpu, FLAG_C, cpu->fetched & 0x80);
+    uint8_t result = cpu->fetched << 1;
 
-    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
-    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
+
+    if (cpu_lookup[cpu->opcode].addrmode == IMP)
+        cpu->a = result;
+    else
+        bus_write(cpu->bus, cpu->addr_abs, result);
 
     return 0;
 }
@@ -143,6 +149,8 @@ uint8_t BPL(CPU *cpu)
 
 uint8_t BRK(CPU *cpu)
 {
+    
+
     return 0;
 }
 
@@ -243,7 +251,14 @@ uint8_t CPY(CPU *cpu)
 
 uint8_t DEC(CPU *cpu)
 {
-    return 0;
+    cpu_fetch(cpu);
+    uint8_t result = cpu->fetched - 1;
+    bus_write(cpu->bus, cpu->addr_abs, result);
+
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
+
+    return 1;
 }
 
 uint8_t DEX(CPU *cpu)
@@ -280,7 +295,11 @@ uint8_t EOR(CPU *cpu)
 uint8_t INC(CPU *cpu)
 {
     cpu_fetch(cpu);
-    //bus_write(cpu->bus, cpu->addr_abs, cpu->fetched + 1);
+    uint8_t result = cpu->fetched + 1;
+    bus_write(cpu->bus, cpu->addr_abs, result);
+
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
 
     return 1;
 }
@@ -364,11 +383,17 @@ uint8_t LDY(CPU *cpu)
 
 uint8_t LSR(CPU *cpu)
 {
-    cpu_set_flag(cpu, FLAG_C, cpu->a & 0x01);
-    cpu->a >>= 1;
+    cpu_fetch(cpu);
+    cpu_set_flag(cpu, FLAG_C, cpu->fetched & 0x01);
+    uint8_t result = cpu->fetched >> 1;
 
-    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
     cpu_set_flag(cpu, FLAG_N, 0);
+
+    if (cpu_lookup[cpu->opcode].addrmode == IMP)
+        cpu->a = result;
+    else
+        bus_write(cpu->bus, cpu->addr_abs, result);
 
     return 0;
 }
@@ -432,26 +457,38 @@ uint8_t PLP(CPU *cpu)
 
 uint8_t ROL(CPU *cpu)
 {
+    cpu_fetch(cpu);
     uint8_t old_C = cpu_get_flag(cpu, FLAG_C);
-    cpu_set_flag(cpu, FLAG_C, cpu->a & 0x80);
-    cpu->a <<= 1;
-    cpu->a |= old_C;
+    cpu_set_flag(cpu, FLAG_C, cpu->fetched & 0x80);
+    uint8_t result = cpu->fetched << 1;
+    result |= old_C;
 
-    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
-    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
+
+    if (cpu_lookup[cpu->opcode].addrmode == IMP)
+        cpu->a = result;
+    else
+        bus_write(cpu->bus, cpu->addr_abs, result);
 
     return 0;
 }
 
 uint8_t ROR(CPU *cpu)
 {
+    cpu_fetch(cpu);
     uint8_t old_C = cpu_get_flag(cpu, FLAG_C);
-    cpu_set_flag(cpu, FLAG_C, cpu->a & 0x01);
-    cpu->a >>= 1;
-    cpu->a |= (old_C << 7);
+    cpu_set_flag(cpu, FLAG_C, cpu->fetched & 0x01);
+    uint8_t result = cpu->fetched >> 1;
+    result |= (old_C << 7);
 
-    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
-    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
+    cpu_set_flag(cpu, FLAG_Z, result == 0);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
+
+    if (cpu_lookup[cpu->opcode].addrmode == IMP)
+        cpu->a = result;
+    else
+        bus_write(cpu->bus, cpu->addr_abs, result);
 
     return 0;
 }
@@ -530,7 +567,6 @@ uint8_t SEI(CPU *cpu)
 uint8_t STA(CPU *cpu)
 {
     bus_write(cpu->bus, cpu->addr_abs, cpu->a);
-
     return 0;
 }
 
@@ -542,6 +578,7 @@ uint8_t STX(CPU *cpu)
 
 uint8_t STY(CPU *cpu)
 {
+    bus_write(cpu->bus, cpu->addr_abs, cpu->y);
     return 0;
 }
 

@@ -144,7 +144,7 @@ uint8_t IZY(CPU *cpu)
 
     cpu->addr_abs = ((hi << 8) | lo) + cpu->y;
 
-    if ((cpu->addr_abs | 0xFF00) != (hi << 8))
+    if ((cpu->addr_abs & 0xFF00) != (hi << 8))
         return 1;
 
     return 0;
