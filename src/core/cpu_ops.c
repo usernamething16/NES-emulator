@@ -149,7 +149,19 @@ uint8_t BPL(CPU *cpu)
 
 uint8_t BRK(CPU *cpu)
 {
-    
+    cpu->pc++;
+    cpu_set_flag(cpu, FLAG_I, 1);
+    uint8_t hi = (cpu->pc >> 8) & 0x00FF;
+    uint8_t lo = (cpu->pc & 0x00FF);
+
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, hi);
+    cpu->stkp--;
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, lo);
+    cpu->stkp--;
+    bus_write(cpu->bus, 0x0100 + cpu->stkp, cpu->status | FLAG_B | FLAG_U);
+    cpu->stkp--;
+
+    cpu->pc = (uint16_t)bus_read(cpu->bus, 0xFFFE) | (uint16_t)bus_read(cpu->bus, 0xFFFF) << 8;
 
     return 0;
 }
