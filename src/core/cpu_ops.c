@@ -4,6 +4,16 @@
 // ops
 uint8_t ADC(CPU *cpu)
 {
+    cpu_fetch(cpu);
+    uint16_t result = (uint16_t)cpu->a + cpu->fetched + (cpu->status & FLAG_C);
+
+    cpu_set_flag(cpu, FLAG_C, result > 0x00FF);
+    cpu_set_flag(cpu, FLAG_Z, (result & 0x00FF) == 0);
+    cpu_set_flag(cpu, FLAG_V, (result ^ cpu->a) & (result ^ cpu->fetched) & 0x80);
+    cpu_set_flag(cpu, FLAG_N, result & 0x80);
+
+    cpu->a = result & 0x00FF;
+
     return 0;
 }
 
