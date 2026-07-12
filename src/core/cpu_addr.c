@@ -125,8 +125,8 @@ uint8_t IZX(CPU *cpu)
     uint16_t arg = bus_read(cpu->bus, cpu->pc);
     cpu->pc++;
 
-    uint16_t lo = bus_read(cpu->bus, (arg + cpu->x) | 0x00FF);
-    uint16_t hi = bus_read(cpu->bus, (arg + cpu->x + 1) | 0x00FF);
+    uint16_t lo = bus_read(cpu->bus, (arg + cpu->x) & 0x00FF);
+    uint16_t hi = bus_read(cpu->bus, (arg + cpu->x + 1) & 0x00FF);
 
     cpu->addr_abs = (hi << 8) | lo;
 
@@ -139,8 +139,8 @@ uint8_t IZY(CPU *cpu)
     uint16_t arg = bus_read(cpu->bus, cpu->pc);
     cpu->pc++;
 
-    uint16_t lo = bus_read(cpu->bus, arg | 0x00FF);
-    uint16_t hi = bus_read(cpu->bus, (arg + 1) | 0x00FF);
+    uint16_t lo = bus_read(cpu->bus, arg & 0x00FF);
+    uint16_t hi = bus_read(cpu->bus, (arg + 1) & 0x00FF);
 
     cpu->addr_abs = ((hi << 8) | lo) + cpu->y;
 
