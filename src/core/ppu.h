@@ -6,7 +6,11 @@
 typedef struct Cartridge Cartridge;
 
 typedef struct PPU {
+    uint8_t vram[2 * 1024];
+    uint8_t palette[32];
+    uint8_t oam[256];
 
+    Cartridge *cart;
 } PPU;
 
 void ppu_init(PPU *ppu);
