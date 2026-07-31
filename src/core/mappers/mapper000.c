@@ -41,4 +41,9 @@ void mapper000_init(Mapper *m, uint8_t prg_banks, uint8_t chr_banks)
 {
     m->prg_banks = prg_banks;
     m->chr_banks = chr_banks;
+
+    m->cpu_map_read = m000_cpu_map_read;
+    m->cpu_map_write = m000_cpu_map_write;
+    m->ppu_map_read = m000_ppu_map_read;
+    m->ppu_map_write = m000_ppu_map_write;
 }
