@@ -24,6 +24,9 @@ int cartridge_load(Cartridge *cart, const char *path)
     cart->prg_banks = header[4];
     cart->chr_banks = header[5];
 
+    cart->mapper_id = (header[7] & 0xF0) | (header[6] >> 4);
+    cart->mirror = (header[6] & 0x01) ? MIRROR_VERTICAL : MIRROR_HORIZONTAL;  
+
     if (header[6] & 0x04) fseek(f, 512, SEEK_CUR);
 
     size_t prg_size = (size_t)cart->prg_banks * 16 * 1024;
@@ -43,21 +46,45 @@ int cartridge_load(Cartridge *cart, const char *path)
     memset(cart->chr, 0, sizeof cart->chr);
     if (chr_size) {if (fread(cart->chr, 1, chr_size, f) != chr_size) { } }
 
+    switch (cart->mapper_id) {
+        case 0: mapper000_init(&cart->mapper, cart->prg_banks, cart->chr_banks); break;
+        default: fclose(f); return 1;
+    }
+
     fclose(f);
     cart->loaded = 1;
+
     return 0;
 }
 
-uint8_t cartridge_read(Cartridge *cart, uint16_t addr)
+uint8_t cartridge_cpu_read(Cartridge *cart, uint16_t addr)
 {
-    if (addr >= 0x8000) {
-        uint16_t mask = (cart->prg_banks > 1) ? 0x7FFF : 0x3FFF;
-        return cart->prg[addr & mask];
+    uint32_t mapped;
+    if (cart->mapper.cpu_map_read(&cart->mapper, addr, &mapped))
+        return cart->prg[mapped];
+    return 0x00;
+}
+
+void cartridge_cpu_write(Cartridge *cart, uint16_t addr, uint8_t data)
+{
+    uint32_t mapped;
+    if (cart->mapper.cpu_map_write(&cart->mapper, addr, &mapped))
+
+    (void)mapped; (void)data;
+}
+
+uint8_t cartridge_ppu_read(Cartridge *cart, uint16_t addr)
+{
+    uint32_t mapped;
+    if (cart->mapper.ppu_map_read(&cart->mapper, addr, &mapped)) {
+        return cart->chr[mapped];
     }
     return 0x00;
 }
 
-void cartridge_write(Cartridge *cart, uint16_t addr, uint8_t data)
+void cartridge_ppu_write(Cartridge *cart, uint16_t addr, uint8_t data)
 {
-    (void)cart; (void)addr; (void)data;
+    uint32_t mapped;
+    if (cart->mapper.ppu_map_write(&cart->mapper, addr, &mapped))
+        cart->chr[mapped] = data;
 }
