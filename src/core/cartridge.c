@@ -68,9 +68,10 @@ uint8_t cartridge_cpu_read(Cartridge *cart, uint16_t addr)
 void cartridge_cpu_write(Cartridge *cart, uint16_t addr, uint8_t data)
 {
     uint32_t mapped;
-    if (cart->mapper.cpu_map_write(&cart->mapper, addr, &mapped))
-
-    (void)mapped; (void)data;
+    if (cart->mapper.cpu_map_write(&cart->mapper, addr, &mapped)) {
+        (void)mapped;
+        (void)data;
+    }
 }
 
 uint8_t cartridge_ppu_read(Cartridge *cart, uint16_t addr)
