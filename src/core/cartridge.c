@@ -40,11 +40,18 @@ int cartridge_load(Cartridge *cart, const char *path)
         return 1;
     }
 
-    size_t chr_size = (size_t)cart->prg_banks * 8 * 1024;
-    if (chr_size > sizeof cart->chr)
-        chr_size = sizeof cart->chr;
     memset(cart->chr, 0, sizeof cart->chr);
-    if (chr_size) {if (fread(cart->chr, 1, chr_size, f) != chr_size) { } }
+    if (cart->chr_banks > 0) {
+        size_t chr_size = (size_t)cart->chr_banks * 8 * 1024;
+        if (chr_size > sizeof cart->chr) {
+            fclose(f);
+            return 1;
+        }
+        if (fread(cart->chr, 1, chr_size, f) != chr_size) {
+            fclose(f);
+            return 1;
+        }
+    }
 
     switch (cart->mapper_id) {
         case 0: mapper000_init(&cart->mapper, cart->prg_banks, cart->chr_banks); break;
