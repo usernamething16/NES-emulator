@@ -52,7 +52,7 @@ uint8_t BCC(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -67,7 +67,7 @@ uint8_t BCS(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -82,7 +82,7 @@ uint8_t BEQ(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -108,7 +108,7 @@ uint8_t BMI(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -123,7 +123,7 @@ uint8_t BNE(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -138,7 +138,7 @@ uint8_t BPL(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -172,7 +172,7 @@ uint8_t BVC(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -188,7 +188,7 @@ uint8_t BVS(CPU *cpu)
         cpu->cycles++;
         cpu->addr_abs = cpu->pc + cpu->addr_rel;
 
-        if (cpu->addr_abs & 0xFF00 != cpu->pc & 0xFF00)
+        if ((cpu->addr_abs & 0xFF00) != (cpu->pc & 0xFF00))
             cpu->cycles++;
         
         cpu->pc = cpu->addr_abs;
@@ -450,8 +450,8 @@ uint8_t PLA(CPU *cpu)
     cpu->stkp++;
     cpu->a = bus_read(cpu->bus, 0x0100 + cpu->stkp);
 
-    cpu_set_flag(cpu->bus, FLAG_Z, cpu->a == 0);
-    cpu_set_flag(cpu->bus, FLAG_N, cpu->a & 0x80);
+    cpu_set_flag(cpu, FLAG_Z, cpu->a == 0);
+    cpu_set_flag(cpu, FLAG_N, cpu->a & 0x80);
 
     return 0;
 }
@@ -654,5 +654,7 @@ uint8_t TYA(CPU *cpu)
 // illegal ops
 uint8_t XXX(CPU *cpu)
 {
+    (void)cpu;
+
     return 0;
 }
