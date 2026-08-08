@@ -13,7 +13,7 @@ uint8_t bus_read(Bus *bus, uint16_t addr)
     if (addr <= 0x1FFF)
         return bus->ram[addr & 0x07FF];
     if (addr >= 0x8000) {
-        uint8_t v = cartridge_read(&bus->cart, addr);
+        uint8_t v = cartridge_cpu_read(&bus->cart, addr);
         //printf("fetch %04X -> %02X\n", addr, v);
         return v;
     }
@@ -25,5 +25,5 @@ void bus_write(Bus *bus, uint16_t addr, uint8_t data)
     if (addr <= 0x1FFF)
         bus->ram[addr & 0x07FF] = data;
     else if (addr >= 0x8000)
-        cartridge_write(&bus->cart, addr, data);
+        cartridge_cpu_write(&bus->cart, addr, data);
 }
