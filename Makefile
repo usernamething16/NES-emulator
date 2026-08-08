@@ -10,7 +10,8 @@ SRCS := \
 	src/core/cpu_addr.c \
 	src/core/cpu_tables.c \
 	src/core/bus.c \
-	src/core/cartridge.c
+	src/core/cartridge.c \
+	src/core/mappers/mapper000.c
 
 OBJS := $(SRCS:%.c=$(BUILD)/%.o)
 
