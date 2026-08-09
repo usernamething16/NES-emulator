@@ -1,6 +1,6 @@
 CC := gcc
-CFLAGS := -std=c11 -Wall -Wextra -Isrc -g
-LDFLAGS :=
+CFLAGS := -std=c11 -Wall -Wextra -Isrc -g $(shell pkg-config --cflags sdl3)
+LDFLAGS := $(shell pkg-config --libs sdl3)
 BUILD := build
 
 SRCS := \
@@ -11,7 +11,8 @@ SRCS := \
 	src/core/cpu_tables.c \
 	src/core/bus.c \
 	src/core/cartridge.c \
-	src/core/mappers/mapper000.c
+	src/core/mappers/mapper000.c \
+	src/platform/video.c
 
 OBJS := $(SRCS:%.c=$(BUILD)/%.o)
 
