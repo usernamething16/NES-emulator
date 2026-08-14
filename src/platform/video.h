@@ -3,6 +3,6 @@
 
 #include <stdint.h>
 
-typedef struct Videso Video;
+typedef struct Video Video;
 
 #endif
