@@ -11,7 +11,7 @@ struct Video {
     int tex_h;
 };
 
-Video *Video_Create(const char *title, int tex_w, int tex_h, int win_w, int win_h)
+Video *video_create(const char *title, int tex_w, int tex_h, int win_w, int win_h)
 {
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         fprintf(stderr, "Sdl_Init failed");
@@ -26,4 +26,28 @@ Video *Video_Create(const char *title, int tex_w, int tex_h, int win_w, int win_
 
     v->tex_w = tex_w;
     v->tex_h = tex_h;
+
+    if (!SDL_CreateWindowAndRenderer(title, win_w, win_h, 0, &v->window, &v->renderer)) {
+        fprintf(stderr, "failed to create window and renderer %s\n", SDL_GetError());
+        free(v);
+        SDL_Quit();
+        return NULL;
+    }
+
+    v->texture = SDL_CreateTexture(v->renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, tex_w, tex_h);
+
+    if (!v->texture) {
+        fprintf(stderr, "CreateTexture failed %s\n", SDL_GetError());
+        video_destroy(v);
+        return NULL;
+    }
+
+    SDL_SetTextureScaleMode(v->texture, SDL_SCALEMODE_NEAREST);
+
+    return v;
+}
+
+void video_destroy(Video *v)
+{
+
 }
