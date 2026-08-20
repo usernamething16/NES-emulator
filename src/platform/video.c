@@ -49,5 +49,10 @@ Video *video_create(const char *title, int tex_w, int tex_h, int win_w, int win_
 
 void video_destroy(Video *v)
 {
-
+    if (!v) return;
+    if (v->texture) SDL_DestroyTexture(v->texture);
+    if (v->renderer) SDL_DestroyRenderer(v->renderer);
+    if (v->window) SDL_DestroyWindow(v->window);
+    free(v);
+    SDL_Quit();
 }
