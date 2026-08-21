@@ -56,3 +56,15 @@ void video_destroy(Video *v)
     free(v);
     SDL_Quit();
 }
+
+int video_poll(Video *v)
+{
+    (void)v;
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_EVENT_QUIT)
+            return 0;
+        // TODO: inputs and stuff
+    }
+    return 1;
+}
