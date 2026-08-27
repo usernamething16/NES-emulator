@@ -62,9 +62,18 @@ int video_poll(Video *v)
     (void)v;
     SDL_Event e;
     while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_EVENT_QUIT)
+        switch (e.type) {
+        case SDL_EVENT_QUIT:
             return 0;
-        // TODO: inputs and stuff
+
+        case SDL_EVENT_KEY_DOWN:
+            if (e.key.key == SDLK_ESCAPE)
+                return 0;
+            break;
+        
+        default:
+            break;
+        }
     }
     return 1;
 }
