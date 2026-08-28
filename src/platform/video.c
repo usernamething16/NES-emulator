@@ -83,6 +83,6 @@ void video_present(Video *v, const uint32_t *frame_buffer)
     SDL_UpdateTexture(v->texture, NULL, frame_buffer, v->tex_w * (int)sizeof(uint32_t));
 
     SDL_RenderClear(v->renderer);
-    SDL_RenderTexture(v->renderer, v->tex_h, NULL, NULL);
+    SDL_RenderTexture(v->renderer, v->texture, NULL, NULL);
     SDL_RenderPresent(v->renderer);
 }
