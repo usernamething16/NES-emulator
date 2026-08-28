@@ -25,7 +25,7 @@ $(BUILD)/nes: $(OBJS)
 
 $(BUILD)/%.o: %.c
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 TEST_OBJS := $(filter-out $(BUILD)/src/main.o,$(OBJS))
 
@@ -33,5 +33,11 @@ test: $(TEST_OBJS) $(BUILD)/tests/nestest.o
 	$(CC) $(TEST_OBJS) $(BUILD)/tests/nestest.o -o $(BUILD)/nestest $(LDFLAGS)
 	./$(BUILD)/nestest
 
+videotest: $(TEST_OBJS) $(BUILD)/tests/videotest.o
+	$(CC) $(TEST_OBJS) $(BUILD)/tests/videotest.o -o $(BUILD)/videotest $(LDFLAGS)
+	./$(BUILD)/videotest
+
 clean:
 	rm -rf $(BUILD)
+
+-include $(OBJS:.o=.d) $(BUILD)/tests/nestest.d $(BUILD)/tests/videotest.d
