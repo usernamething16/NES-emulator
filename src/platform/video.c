@@ -18,7 +18,7 @@ Video *video_create(const char *title, int tex_w, int tex_h, int win_w, int win_
         return NULL;
     }
 
-    Video *v = calloc(1, sizeof v);
+    Video *v = calloc(1, sizeof *v);
     if (!v) {
         SDL_Quit();
         return NULL;
