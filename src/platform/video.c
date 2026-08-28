@@ -38,7 +38,9 @@ Video *video_create(const char *title, int tex_w, int tex_h, int win_w, int win_
 
     if (!v->texture) {
         fprintf(stderr, "CreateTexture failed %s\n", SDL_GetError());
-        video_destroy(v);
+        SDL_DestroyRenderer(v->renderer);
+        SDL_DestroyWindow(v->window);
+        free(v);
         return NULL;
     }
 
