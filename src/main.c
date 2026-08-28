@@ -3,6 +3,7 @@
 
 #include "core/bus.h"
 #include "core/cartridge.h"
+#include "platform/video.h"
 
 int main(int argc, char **argv)
 {
@@ -30,7 +31,6 @@ int main(int argc, char **argv)
     }
     printf("ran 100000 instructions | PC = $%04X A:%02X X:%02X Y:%02X\n",
             nes.cpu.pc, nes.cpu.a, nes.cpu.x, nes.cpu.y);
-
 
     return 0;
 }
