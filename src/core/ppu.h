@@ -10,6 +10,8 @@ typedef struct PPU {
     uint8_t palette[32];
     uint8_t oam[256];
 
+    uint32_t framebuffer[256 * 240]; 
+
     Cartridge *cart;
 } PPU;
 
