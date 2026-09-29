@@ -6,11 +6,28 @@
 typedef struct Cartridge Cartridge;
 
 typedef struct PPU {
+    uint8_t ctrl; // PPUCTRL
+    uint8_t mask; // PPUMASK
+    uint8_t status; // PPUSTATUS
+    uint8_t oam_addr; // OAMADDR
+
+    uint8_t v;
+    uint8_t t;
+    uint8_t x;
+    uint8_t w;
+    uint8_t read_buffer;
+
     uint8_t vram[2 * 1024];
     uint8_t palette[32];
     uint8_t oam[256];
 
     uint32_t framebuffer[256 * 240]; 
+
+    int16_t scanline;
+    int16_t cycle;
+    uint16_t frame;
+
+    int frame_done;
 
     Cartridge *cart;
 } PPU;
@@ -21,6 +38,5 @@ void ppu_clock(PPU *ppu);
 
 uint8_t ppu_read(PPU *ppu, uint16_t addr);
 void ppu_write(PPU *ppu, uint16_t addr, uint8_t data);
-
 
 #endif
