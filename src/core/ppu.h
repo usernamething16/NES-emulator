@@ -38,5 +38,6 @@ void ppu_clock(PPU *ppu);
 
 uint8_t ppu_read(PPU *ppu, uint16_t addr);
 void ppu_write(PPU *ppu, uint16_t addr, uint8_t data);
+void ppu_decode_tile(PPU *ppu, int table, int index, uint8_t out[64]);
 
 #endif

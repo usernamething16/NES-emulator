@@ -55,5 +55,17 @@ void ppu_write(PPU *ppu, uint16_t addr, uint8_t data)
 
 void ppu_decode_tile(PPU *ppu, int table, int index, uint8_t out[64])
 {
+    uint16_t base = (uint16_t)(table ? 0x1000 : 0x0000) + (uint16_t)(index * 16);
 
+    for (int row = 0; row < 8; row++) {
+        uint8_t plane0 = ppu_read(ppu, base + row);
+        uint8_t plane1 = ppu_read(ppu, base + row + 8);
+
+        for (int col = 0; col < 8; col++) {
+            uint8_t lo = (plane0 >> (7 - col)) & 1;
+            uint8_t hi = (plane1 >> (7 - col)) & 1;
+
+            out[row * 8 + col] = (uint8_t)(hi << 1 | lo);
+        }
+    }
 }
