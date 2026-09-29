@@ -12,7 +12,8 @@ SRCS := \
 	src/core/bus.c \
 	src/core/cartridge.c \
 	src/core/mappers/mapper000.c \
-	src/platform/video.c
+	src/platform/video.c \
+	src/core/ppu.c
 
 OBJS := $(SRCS:%.c=$(BUILD)/%.o)
 
@@ -36,6 +37,10 @@ test: $(TEST_OBJS) $(BUILD)/tests/nestest.o
 videotest: $(TEST_OBJS) $(BUILD)/tests/videotest.o
 	$(CC) $(TEST_OBJS) $(BUILD)/tests/videotest.o -o $(BUILD)/videotest $(LDFLAGS)
 	./$(BUILD)/videotest
+
+tiletest: $(TEST_OBJS) $(BUILD)/tests/tiletest.o
+	$(CC) $(TEST_OBJS) $(BUILD)/tests/tiletest.o -o $(BUILD)/tiletest $(LDFLAGS)
+	./$(BUILD)/tiletest
 
 clean:
 	rm -rf $(BUILD)
