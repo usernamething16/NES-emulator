@@ -42,6 +42,10 @@ tiletest: $(TEST_OBJS) $(BUILD)/tests/tiletest.o
 	$(CC) $(TEST_OBJS) $(BUILD)/tests/tiletest.o -o $(BUILD)/tiletest $(LDFLAGS)
 	./$(BUILD)/tiletest
 
+patterntest: $(TEST_OBJS) $(BUILD)/tests/patterntest.o
+	$(CC) $(TEST_OBJS) $(BUILD)/tests/patterntest.o -o $(BUILD)/patterntest $(LDFLAGS)
+	./$(BUILD)/patterntest
+
 clean:
 	rm -rf $(BUILD)
 
