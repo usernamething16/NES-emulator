@@ -40,7 +40,7 @@ uint8_t ppu_read(PPU *ppu, uint16_t addr)
     if (addr <= 0x1FFF) {
         return cartridge_ppu_read(ppu->cart, addr);
     } else if (addr <= 0x3EFF) {
-        addr &= 4095;
+        addr &= 0x0FFF;
         int table = addr / 1024;
         int bank;
 
@@ -52,7 +52,7 @@ uint8_t ppu_read(PPU *ppu, uint16_t addr)
 
         return ppu->vram[bank * 1024 + (addr & 0x03FF)];
     } else if (addr <= 0x3FFF) {
-        addr &= 31;
+        addr &= 0x001F;
 
         //mirroring every first color
         if (addr >= 0x10 && (addr & 0x03) == 0)
@@ -67,9 +67,29 @@ void ppu_write(PPU *ppu, uint16_t addr, uint8_t data)
 {
     addr &= 0x3FFF;
 
-    if (addr < 0x1FFF) {
+    if (addr <= 0x1FFF) {
         cartridge_ppu_write(ppu->cart, addr, data);
         return;
+    } else if (addr <= 0x3EFF) {
+        addr &= 0x0FFF;
+        int table = addr / 1024;
+        int bank;
+
+        if (ppu->cart->mirror == MIRROR_VERTICAL) {
+            bank = (table == 0 || table == 2) ? 0 : 1;
+        } else {
+            bank = (table == 0 || table == 1) ? 0 : 1;
+        }
+
+        ppu->vram[bank * 1024 + (addr & 0x03FF)] = data;
+    } else if (addr <= 0x3FFF) {
+        addr &= 0x001F;
+
+        //mirroring every first color
+        if (addr >= 0x10 && (addr & 0x03) == 0)
+            addr -= 0x10;
+
+        ppu->palette[addr] = data;
     }
 }
 
