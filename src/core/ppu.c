@@ -37,9 +37,29 @@ uint8_t ppu_read(PPU *ppu, uint16_t addr)
 {
     addr &= 0x3FFF;
 
-    if (addr < 0x1FFF)
+    if (addr <= 0x1FFF) {
         return cartridge_ppu_read(ppu->cart, addr);
+    } else if (addr <= 0x3EFF) {
+        addr &= 4095;
+        int table = addr / 1024;
+        int bank;
 
+        if (ppu->cart->mirror == MIRROR_VERTICAL) {
+            bank = (table == 0 || table == 2) ? 0 : 1;
+        } else {
+            bank = (table == 0 || table == 1) ? 0 : 1;
+        }
+
+        return ppu->vram[bank * 1024 + (addr & 0x03FF)];
+    } else if (addr <= 0x3FFF) {
+        addr &= 31;
+
+        //mirroring every first color
+        if (addr >= 0x10 && (addr & 0x03) == 0)
+            addr -= 0x10;
+
+        return ppu->palette[addr];
+    }
     return 0x00;
 }
 
