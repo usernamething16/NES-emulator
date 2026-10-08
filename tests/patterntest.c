@@ -5,12 +5,12 @@
 
 int main(int argc, char **argv)
 {
-    const uint32_t grayscale[] = {
+    /*const uint32_t grayscale[] = {
         0xFF000000,
         0xFF555555,
         0xFFAAAAAA,
         0xFFFFFFFF
-    };
+    };*/
     const char *rom = (argc > 1) ? argv[1] : "tests/roms/nestest.nes";
 
     Cartridge cart;
@@ -23,6 +23,11 @@ int main(int argc, char **argv)
     ppu_init(&ppu);
     ppu_connect_cartridge(&ppu, &cart);
 
+    ppu.palette[0] = 0x0F;
+    ppu.palette[1] = 0x16;
+    ppu.palette[2] = 0x27;
+    ppu.palette[3] = 0x30;
+
     static uint32_t framebuffer[256 * 128];
     uint8_t tile[64];
     for (int table = 0; table < 2; table++) {
@@ -34,7 +39,7 @@ int main(int argc, char **argv)
 
             for (int row = 0; row < 8; row++) {
                 for (int col = 0; col < 8; col++) {
-                    uint32_t color = grayscale[tile[row * 8 + col]];
+                    uint32_t color = ppu_color_from_palette(&ppu, 0, tile[row * 8 + col]);
 
                     int px = table * 128 + tile_x * 8 + col; 
                     int py = tile_y * 8 + row;
