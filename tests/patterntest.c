@@ -11,7 +11,7 @@ int main(int argc, char **argv)
         0xFFAAAAAA,
         0xFFFFFFFF
     };*/
-    const char *rom = (argc > 1) ? argv[1] : "tests/roms/nestest.nes";
+    const char *rom = (argc > 1) ? argv[1] : "tests/roms/colours/Colours.NES";
 
     Cartridge cart;
     if (cartridge_load(&cart, rom) != 0) {
