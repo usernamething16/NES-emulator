@@ -28,10 +28,17 @@ void ppu_connect_cartridge(PPU *ppu, Cartridge *cart)
     ppu->cart = cart;
 }
 
-uint32_t ppu_palate_argb(uint8_t nes_color)
+uint32_t ppu_palette_argb(uint8_t nes_color)
 {
     return nes_palette[nes_color & 0x3F];
 }
+
+uint32_t ppu_color_from_palette(PPU *ppu, uint8_t palette, uint8_t pixel)
+{
+    uint8_t idx = ppu_read(ppu, 0x3F00 + (palette * 4) + pixel);
+    return ppu_palette_argb;
+}
+
 
 uint8_t ppu_read(PPU *ppu, uint16_t addr)
 {
