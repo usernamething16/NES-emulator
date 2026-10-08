@@ -36,7 +36,7 @@ uint32_t ppu_palette_argb(uint8_t nes_color)
 uint32_t ppu_color_from_palette(PPU *ppu, uint8_t palette, uint8_t pixel)
 {
     uint8_t idx = ppu_read(ppu, 0x3F00 + (palette * 4) + pixel);
-    return ppu_palette_argb;
+    return ppu_palette_argb(idx);
 }
 
 
