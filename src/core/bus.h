@@ -4,11 +4,13 @@
 #include <stdint.h>
 #include "cpu.h"
 #include "cartridge.h"
+#include "ppu.h"
 
 typedef struct Bus {
     CPU cpu;
-    uint8_t ram[64 * 1024];
+    PPU ppu;
     Cartridge cart;
+    uint8_t ram[64 * 1024];
 } Bus;
 
 void bus_init(Bus *bus);
