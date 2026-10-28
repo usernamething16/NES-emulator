@@ -116,3 +116,42 @@ void ppu_decode_tile(PPU *ppu, int table, int index, uint8_t out[64])
         }
     }
 }
+
+uint8_t ppu_cpu_read(PPU *ppu, uint16_t addr)
+{
+    uint8_t data = 0x00;
+
+    switch (addr) {
+    case 0x0000:
+        break;
+    
+    case 0x0001:
+        break;
+    
+    case 0x0002:
+        data =  (ppu->status & (0xE0)) | (ppu->read_buffer & (0x1F));
+        ppu->status &= 0x7F;
+        ppu->w = 0;
+
+        break;
+    
+    case 0x0003:
+        break;
+    
+    case 0x0004:
+        break;
+    case 0x0005:
+        break;
+    case 0x0006:
+        break;
+    case 0x0007:
+        break;
+    }
+
+    return data;
+}
+
+void ppu_cpu_write(PPU *ppu, uint16_t addr, uint8_t data)
+{
+
+}
