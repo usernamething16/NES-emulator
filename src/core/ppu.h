@@ -6,14 +6,14 @@
 typedef struct Cartridge Cartridge;
 
 typedef struct PPU {
-    uint8_t ctrl; // PPUCTRL
-    uint8_t mask; // PPUMASK
-    uint8_t status; // PPUSTATUS
-    uint8_t oam_addr; // OAMADDR
-    uint8_t oam_data; // OAMDATA
-    uint8_t ppu_scroll; // PPUSCROLL
-    uint8_t ppu_addr; // PPUADDR
-    uint8_t ppu_data; // PPUDATA
+    uint8_t ppu_ctrl; // PPUCTRL $2000
+    uint8_t ppu_mask; // PPUMASK $2001
+    uint8_t ppu_status; // PPUSTATUS $2002
+    uint8_t oam_addr; // OAMADDR $2003
+    uint8_t oam_data; // OAMDATA $2004
+    uint8_t ppu_scroll; // PPUSCROLL $2005
+    uint8_t ppu_addr; // PPUADDR $2006
+    uint8_t ppu_data; // PPUDATA $2007
 
     uint16_t v;
     uint16_t t;
@@ -35,6 +35,17 @@ typedef struct PPU {
 
     Cartridge *cart;
 } PPU;
+
+enum ppu_address_t {
+    PPUCRTL,
+    PPUMASK,
+    PPUSTATUS,
+    OAMADDR,
+    OAMDATA,
+    PPUSCROLL,
+    PPUADDR,
+    PPUDATA
+};
 
 void ppu_init(PPU *ppu);
 void ppu_connect_cartridge(PPU *ppu, Cartridge *cart);

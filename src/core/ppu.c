@@ -122,29 +122,26 @@ uint8_t ppu_cpu_read(PPU *ppu, uint16_t addr)
     uint8_t data = 0x00;
 
     switch (addr) {
-    case 0x0000:
+    case PPUCRTL:
+    case PPUMASK:
         break;
-    
-    case 0x0001:
-        break;
-    
-    case 0x0002:
-        data =  (ppu->status & (0xE0)) | (ppu->read_buffer & (0x1F));
-        ppu->status &= 0x7F;
-        ppu->w = 0;
 
+    case PPUSTATUS:
+        data = (ppu->ppu_status & (0xE0)) | (ppu->read_buffer & (0x1F));
+        ppu->ppu_status &= 0x7F;
+        ppu->w = 0;
         break;
     
-    case 0x0003:
+    case OAMADDR:
         break;
     
-    case 0x0004:
+    case OAMDATA:
         break;
-    case 0x0005:
+    case PPUSCROLL:
         break;
-    case 0x0006:
+    case PPUADDR:
         break;
-    case 0x0007:
+    case PPUDATA:
         break;
     }
 
