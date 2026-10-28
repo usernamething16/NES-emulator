@@ -10,11 +10,7 @@ typedef struct PPU {
     uint8_t ppu_mask; // PPUMASK $2001
     uint8_t ppu_status; // PPUSTATUS $2002
     uint8_t oam_addr; // OAMADDR $2003
-    uint8_t oam_data; // OAMDATA $2004
-    uint8_t ppu_scroll; // PPUSCROLL $2005
-    uint8_t ppu_addr; // PPUADDR $2006
-    uint8_t ppu_data; // PPUDATA $2007
-
+    
     uint16_t v;
     uint16_t t;
     uint8_t x;
