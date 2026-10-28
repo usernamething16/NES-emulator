@@ -136,12 +136,21 @@ uint8_t ppu_cpu_read(PPU *ppu, uint16_t addr)
         break;
     
     case OAMDATA:
+        data = ppu->oam[ppu->oam_addr];
         break;
+
     case PPUSCROLL:
-        break;
     case PPUADDR:
         break;
+    
     case PPUDATA:
+        data = ppu->read_buffer;
+        ppu->read_buffer = ppu_read(ppu, ppu->v & 0x2FFF);
+
+        if (ppu->v >= 0x3F00)
+            data = ppu->read_buffer;
+        
+        ppu->v += (ppu->ppu_ctrl & 0x04) ? 32 : 1;
         break;
     }
 
