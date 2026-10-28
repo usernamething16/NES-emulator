@@ -15,8 +15,8 @@ typedef struct PPU {
     uint8_t ppu_addr; // PPUADDR
     uint8_t ppu_data; // PPUDATA
 
-    uint8_t v;
-    uint8_t t;
+    uint16_t v;
+    uint16_t t;
     uint8_t x;
     uint8_t w;
     uint8_t read_buffer;
