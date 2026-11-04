@@ -26,7 +26,8 @@ typedef struct PPU {
     int16_t scanline;
     int16_t cycle;
     uint16_t frame;
-
+    
+    int nmi;
     int frame_done;
 
     Cartridge *cart;
