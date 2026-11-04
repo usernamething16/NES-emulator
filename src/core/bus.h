@@ -11,9 +11,12 @@ typedef struct Bus {
     PPU ppu;
     Cartridge cart;
     uint8_t ram[64 * 1024];
+
+    uint8_t tick;
 } Bus;
 
 void bus_init(Bus *bus);
+void bus_clock(Bus *bus);
 uint8_t bus_read(Bus *bus, uint16_t addr);
 void bus_write(Bus *bus, uint16_t addr, uint8_t data);
 

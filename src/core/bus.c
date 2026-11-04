@@ -10,6 +10,21 @@ void bus_init(Bus *bus)
     ppu_connect_cartridge(&bus->ppu, &bus->cart);
 }
 
+void bus_clock(Bus *bus) {
+    ppu_clock(&bus->ppu);
+
+    bus->tick++;
+    if (bus->tick == 3) {
+        bus->tick = 0;
+        cpu_clock(&bus->cpu);
+    }
+
+    if (bus->ppu.nmi) {
+        bus->ppu.nmi = 0;
+        cpu_nmi(&bus->cpu);
+    }
+}
+
 uint8_t bus_read(Bus *bus, uint16_t addr)
 {
     if (addr <= 0x1FFF)
