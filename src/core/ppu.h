@@ -6,9 +6,9 @@
 typedef struct Cartridge Cartridge;
 
 typedef struct PPU {
-    uint8_t ppu_ctrl; // PPUCTRL $2000
-    uint8_t ppu_mask; // PPUMASK $2001
-    uint8_t ppu_status; // PPUSTATUS $2002
+    uint8_t ctrl; // PPUCTRL $2000
+    uint8_t mask; // PPUMASK $2001
+    uint8_t status; // PPUSTATUS $2002
     uint8_t oam_addr; // OAMADDR $2003
     
     uint16_t v;

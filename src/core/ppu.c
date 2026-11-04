@@ -127,8 +127,8 @@ uint8_t ppu_cpu_read(PPU *ppu, uint16_t addr)
         break;
 
     case PPUSTATUS:
-        data = (ppu->ppu_status & (0xE0)) | (ppu->read_buffer & (0x1F));
-        ppu->ppu_status &= 0x7F;
+        data = (ppu->status & (0xE0)) | (ppu->read_buffer & (0x1F));
+        ppu->status &= 0x7F;
         ppu->w = 0;
         break;
     
@@ -150,7 +150,7 @@ uint8_t ppu_cpu_read(PPU *ppu, uint16_t addr)
         if (ppu->v >= 0x3F00)
             data = ppu->read_buffer;
         
-        ppu->v += (ppu->ppu_ctrl & 0x04) ? 32 : 1;
+        ppu->v += (ppu->ctrl & 0x04) ? 32 : 1;
         break;
     }
 
@@ -159,5 +159,55 @@ uint8_t ppu_cpu_read(PPU *ppu, uint16_t addr)
 
 void ppu_cpu_write(PPU *ppu, uint16_t addr, uint8_t data)
 {
+    switch (addr) {
+    case PPUCRTL:
+        ppu->ctrl = data;
+        ppu->t = (ppu->t & 0xF3FF) | ((uint16_t)(data & 0x03) << 10);
+        break;
 
+    case PPUMASK:
+        ppu->mask = data;
+        break;
+
+    case PPUSTATUS:
+        break;
+    
+    case OAMADDR:
+        ppu->oam_addr = data;
+        break;
+    
+    case OAMDATA:
+        ppu->oam[ppu->oam_addr++] = data; 
+        break;
+
+    case PPUSCROLL:
+        if (ppu->w == 0) {
+            ppu->x = data & 0x07;
+            ppu->t = (ppu->t & 0xFFE0) |  (uint16_t)(data >> 3);
+            ppu->w = 1;
+        } else {
+            ppu->t = (ppu->t & 0x8FFF) | ((uint16_t)(data & 0x07) << 12);
+            ppu->t = (ppu->t & 0xFC1F) | ((uint16_t)(data >> 3) << 5);
+            ppu->w = 0;
+        }
+        break;
+
+    case PPUADDR:
+        if (ppu->w == 0) {
+            ppu->t = (ppu->t & 0x00FF) | ((uint16_t)(data & 0x3F) << 8);
+            ppu->w = 1;
+        } else {
+            ppu->t = (ppu->t & 0xFF00) | (uint16_t)data;
+            ppu->v = ppu->t;
+            ppu->w = 0;
+        }
+        break;
+    
+    case PPUDATA:
+        ppu_write(ppu, ppu->v, data);
+        ppu->v += (ppu->ctrl & 0x04) ? 32 : 1;
+        break;
+    }
+
+    return data;
 }
