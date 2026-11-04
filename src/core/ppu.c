@@ -55,7 +55,29 @@ void ppu_clock(PPU *ppu)
 
 void ppu_render_background(PPU *ppu)
 {
+    // notice: this is placeholder and only applies to table 0 (0x2000)
+    // so no scrolling games like mario (or almost any other lol)
+    
+    for (int y = 0; y < 30; y++) {
+        for (int x = 0; x < 32; x++) {
+            uint8_t tile = ppu_read(ppu, 0x2000 + y * 32 + x);
+            uint8_t attribute = ppu_read(ppu, 0x2000 + 960 + (y / 4) * 8 + (x / 4));
+            int shift = ((y & 2) << 1) | (x & 2);
+            uint8_t palette = (attribute >> shift) & 0x03;
 
+            uint8_t pixels[64];
+            int table = (ppu->ctrl & 0x10) ? 1 : 0;
+            ppu_decode_tile(ppu, table, tile, pixels);
+
+            for (int row = 0; row < 8; row++) {
+                for(int col = 0; col < 8; col++) {
+                    int px = x * 8 + col;
+                    int py = y * 8 + row;
+                    ppu->framebuffer[py * 256 + px] = ppu_color_from_palette(ppu, palette, pixels[row * 8 + col]);
+                }
+            }
+        }
+    }
 }
 
 uint32_t ppu_palette_argb(uint8_t nes_color)
@@ -238,6 +260,4 @@ void ppu_cpu_write(PPU *ppu, uint16_t addr, uint8_t data)
         ppu->v += (ppu->ctrl & 0x04) ? 32 : 1;
         break;
     }
-
-    return data;
 }

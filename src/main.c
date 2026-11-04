@@ -32,7 +32,7 @@ int main(int argc, char **argv)
         nes.ppu.frame_done = 0;
 
         // todo: everything else
-
+        ppu_render_background(&nes.ppu);
         video_present(video, nes.ppu.framebuffer);
     }
 
