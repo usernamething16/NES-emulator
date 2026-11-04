@@ -28,6 +28,30 @@ void ppu_connect_cartridge(PPU *ppu, Cartridge *cart)
     ppu->cart = cart;
 }
 
+void ppu_clock(PPU *ppu) {
+    // vblank
+    if (ppu->scanline == 241 && ppu->cycle == 1) {
+        ppu->status |= 0x80;
+        if (ppu->ctrl & 0x80)
+            ppu->nmi = 1;
+    }
+
+    if (ppu->scanline == -1 && ppu->cycle == 1) {
+        ppu->status &= ~0x80;
+    }
+
+    ppu->cycle++;
+    if (ppu->cycle > 340) {
+        ppu->cycle = 0;
+        ppu->scanline++;
+        if (ppu->scanline > 260) {
+            ppu->scanline = -1;
+            ppu->frame++;
+            ppu->frame_done = 1;
+        }
+    }
+}
+
 uint32_t ppu_palette_argb(uint8_t nes_color)
 {
     return nes_palette[nes_color & 0x3F];
