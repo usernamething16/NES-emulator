@@ -6,6 +6,8 @@ void bus_init(Bus *bus)
     int size = sizeof(bus->ram)/sizeof(bus->ram[0]);
     for (int i = 0; i < size; i++)
         bus->ram[i] = 0x00;
+    ppu_init(&bus->ppu);
+    ppu_connect_cartridge(&bus->ppu, &bus->cart);
 }
 
 uint8_t bus_read(Bus *bus, uint16_t addr)
