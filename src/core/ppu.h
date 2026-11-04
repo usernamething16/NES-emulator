@@ -26,7 +26,7 @@ typedef struct PPU {
     int16_t scanline;
     int16_t cycle;
     uint16_t frame;
-    
+
     int nmi;
     int frame_done;
 
@@ -47,6 +47,7 @@ enum ppu_address_t {
 void ppu_init(PPU *ppu);
 void ppu_connect_cartridge(PPU *ppu, Cartridge *cart);
 void ppu_clock(PPU *ppu);
+void ppu_render_background(PPU *ppu);
 
 uint32_t ppu_color_from_palette(PPU *ppu, uint8_t palette, uint8_t pixel);
 uint8_t ppu_read(PPU *ppu, uint16_t addr);

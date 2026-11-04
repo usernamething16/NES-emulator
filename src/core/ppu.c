@@ -28,7 +28,8 @@ void ppu_connect_cartridge(PPU *ppu, Cartridge *cart)
     ppu->cart = cart;
 }
 
-void ppu_clock(PPU *ppu) {
+void ppu_clock(PPU *ppu)
+{
     // vblank
     if (ppu->scanline == 241 && ppu->cycle == 1) {
         ppu->status |= 0x80;
@@ -50,6 +51,11 @@ void ppu_clock(PPU *ppu) {
             ppu->frame_done = 1;
         }
     }
+}
+
+void ppu_render_background(PPU *ppu)
+{
+
 }
 
 uint32_t ppu_palette_argb(uint8_t nes_color)

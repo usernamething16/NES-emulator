@@ -10,7 +10,8 @@ void bus_init(Bus *bus)
     ppu_connect_cartridge(&bus->ppu, &bus->cart);
 }
 
-void bus_clock(Bus *bus) {
+void bus_clock(Bus *bus)
+{
     ppu_clock(&bus->ppu);
 
     bus->tick++;
