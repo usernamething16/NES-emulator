@@ -261,3 +261,23 @@ void ppu_cpu_write(PPU *ppu, uint16_t addr, uint8_t data)
         break;
     }
 }
+
+void increment_coarse_x(PPU *ppu)
+{
+    if (ppu->v & 0x001F == 31) {
+        ppu->v &= ~0x01F;
+        ppu->v ^= 0x0400;
+    } else {
+        ppu->v++;
+    }
+}
+
+void increment_y(PPU *ppu)
+{
+    if (ppu->v & 0x7000) {
+        ppu->v += 0x1000;
+    } else {
+        ppu->v &= ~0x7000;
+
+    }
+}
