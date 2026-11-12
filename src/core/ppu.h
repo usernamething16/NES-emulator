@@ -57,5 +57,11 @@ void ppu_decode_tile(PPU *ppu, int table, int index, uint8_t out[64]);
 uint8_t ppu_cpu_read(PPU *ppu, uint16_t addr);
 void ppu_cpu_write(PPU *ppu, uint16_t addr, uint8_t data);
 
+void increment_coarse_x(PPU *ppu);
+void increment_y(PPU *ppu);
+
+void copy_x(PPU *ppu);
+void copy_y(PPU *ppu);
+
 
 #endif
