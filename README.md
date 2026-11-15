@@ -1,11 +1,38 @@
-# NES-emulator
+# NES Emulator
 
-A NES emulator written from scratch in C, built as a personal
-project to better understand low level systems programming and
-emulation.
+A Nintendo Entertainment System emulator written from scratch in C for Linux.
+
+The 6502 processor, the picture processing unit, the cartridge interface and the bus connecting them are each implemented directly from hardware documentation and verified against test ROMs as well as actual games.
+
+# Status
+
+### CPU: 
+Complete: All 56 official opcodes, all 12 addressing modes, interrupts
+
+Todo: Unofficial opcodes
+
+# Building
+Requires `gcc`, `make`, `pkg-config` and SDL3.
+
+    make
+    ./build/nes [path to ROM.nes]
+
+note: no ROMs are included in this project 
+
+### Memory and cartridge:
+Complete: Functional bus, mapper interface, NROM (mapper 0)
+Todo: Other mappers
+
+### PPU:
+Complete: Tile decoding, register interface, clock, vblank, NMI, Background rendering
+
+Todo: scrolling, foreground rendering (sprites) 
+
+### Other:
+Complete: SDL3 video frontend
+
+Todo: Controller input, APU (audio), save states
 
 # Attribution
 Hardware behavior referenced from the [NESdev Wiki](https://www.nesdev.org/wiki/)
-The CPU's general structure and opcode table are adapted from javidx9's 
-C++ olcNES series, though the instruction implementations are written
-from scratch using the NESdev Wiki documentation.
+Opcode table and NTSC palette values adapted from [olcNES](https://github.com/OneLoneCoder/olcNES)
