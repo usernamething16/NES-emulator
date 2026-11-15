@@ -4,13 +4,6 @@ A Nintendo Entertainment System emulator written from scratch in C for Linux.
 
 The 6502 processor, the picture processing unit, the cartridge interface and the bus connecting them are each implemented directly from hardware documentation and verified against test ROMs as well as actual games.
 
-# Status
-
-### CPU: 
-Complete: All 56 official opcodes, all 12 addressing modes, interrupts
-
-Todo: Unofficial opcodes
-
 # Building
 Requires `gcc`, `make`, `pkg-config` and SDL3.
 
@@ -18,6 +11,13 @@ Requires `gcc`, `make`, `pkg-config` and SDL3.
     ./build/nes [path to ROM.nes]
 
 note: no ROMs are included in this project 
+
+# Status
+
+### CPU: 
+Complete: All 56 official opcodes, all 12 addressing modes, interrupts
+
+Todo: Unofficial opcodes
 
 ### Memory and cartridge:
 Complete: Functional bus, mapper interface, NROM (mapper 0)
