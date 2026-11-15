@@ -21,6 +21,7 @@ Todo: Unofficial opcodes
 
 ### Memory and cartridge:
 Complete: Functional bus, mapper interface, NROM (mapper 0)
+
 Todo: Other mappers
 
 ### PPU:
