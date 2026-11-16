@@ -6,7 +6,7 @@ The 6502 processor, the picture processing unit, the cartridge interface and the
 
 <img width="512" height="512" alt="screenshot" src="https://github.com/user-attachments/assets/c4665b66-8f1d-4793-bf01-1ab1693cab0e" />
 
-# Building
+## Building
 Requires SDL3.
 
     make
@@ -14,7 +14,7 @@ Requires SDL3.
 
 note: no ROMs are included in this project 
 
-# Status
+## Status
 
 ### CPU: 
 Complete: All 56 official opcodes, all 12 addressing modes, interrupts
@@ -36,6 +36,6 @@ Complete: SDL3 video frontend
 
 Todo: Controller input, APU (audio), save states
 
-# Attribution
+## Attribution
 Hardware behavior referenced from the [NESdev Wiki](https://www.nesdev.org/wiki/)
 Opcode table and NTSC palette values adapted from [olcNES](https://github.com/OneLoneCoder/olcNES)
