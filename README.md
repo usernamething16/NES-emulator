@@ -4,6 +4,8 @@ A Nintendo Entertainment System emulator written from scratch in C for Linux.
 
 The 6502 processor, the picture processing unit, the cartridge interface and the bus connecting them are each implemented directly from hardware documentation and verified against test ROMs as well as actual games.
 
+<img width="512" height="512" alt="screenshot" src="https://github.com/user-attachments/assets/c4665b66-8f1d-4793-bf01-1ab1693cab0e" />
+
 # Building
 Requires SDL3.
 
